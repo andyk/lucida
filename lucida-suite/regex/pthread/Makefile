@@ -1,7 +1,6 @@
 CXX = g++
-LINK_FLAGS = -lpthread
-CXX_FLAGS =  -O2 -ftree-vectorize -mavx -mavx2 -mfma -ffast-math -fpermissive
-LINK_FLAGS += -ldl
+CXX_FLAGS =  -O2
+LINK_FLAGS += -ldl -lpthread
 
 THREADS       = 4
 NUM_PATTERNS  = 100
@@ -28,7 +27,6 @@ $(EXEC): $(OBJECTS) Makefile
 test: CXX_FLAGS += -DTESTING
 test: all
 	@./$(EXEC) $(THREADS) $(NUM_PATTERNS) $(PATTERNS) $(NUM_QUESTIONS) $(QUESTIONS)
-	-@diff -q ../input/$(EXEC).baseline ../input/$(EXEC).pthread
 
 # To remove generated files
 clean:
