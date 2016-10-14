@@ -1,11 +1,13 @@
-# Ignore command center executables
-ccclient
-ccserver
+.project
+.pydevproject
+.settings
+gen-py
+lucidaservice
+lucidatypes
+venv
+*.pyc
+config
+.DS_STORE
+inputs
+models
 
-# Ignore other files
-*.wav
-*.jpg
-*.html
-/js/**
-/archive/**
-/node_modules/**

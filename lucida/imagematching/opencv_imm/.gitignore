@@ -1,0 +1,13 @@
+imm_test
+imm_client
+imm_server
+gen-**
+*.pb
+*.o
+.cproject
+.project
+.settings/*
+.classpath
+/Default/
+server/*.jpg
+

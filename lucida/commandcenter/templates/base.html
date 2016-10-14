@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sticky-footer.css')}}" />
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/jquery-1.10.2.min.js')}}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
+{% endblock %}
+
+<head>
+<base href="/">
+<meta charset="UTF-8" />
+<meta http-equiv="Pragma" content="no-cache">
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<title>Lucida</title>
+<link rel="icon" href="{{ url_for('static', filename='image/lucida.ico')}}" type="image/x-icon" />
+</head>
+
+<body>
+<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container">
+		<div class="navbar-header">
+			<a id="nav_home" class="navbar-brand" href="{{ url_for('main.main_route') }}">Lucida</a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		 	{% if session['logged_in'] %}
+			<ul class="nav navbar-nav navbar-left">
+				<li><a id="nav_albums" href="{{ url_for('create.create_route') }}">Create</a></li>
+		 	</ul>
+
+			<ul class="nav navbar-nav navbar-left">
+				<li><a id="nav_albums" href="{{ url_for('learn.learn_route') }}">Learn</a></li>
+		 	</ul>
+
+			<ul class="nav navbar-nav navbar-left">
+				<li><a id="nav_albums" href="{{ url_for('infer.infer_route') }}">Infer</a></li>
+		 	</ul>
+
+			<ul class="nav navbar-nav navbar-right">
+				<li><a id="nav_logout" href="{{ url_for('user.logout_route') }}">Log out</a><li>
+		 	</ul>
+
+			<ul class="nav navbar-nav navbar-right">
+				<li><a>Logged in as {{ session['username'] }}</a></li>
+		 	</ul>
+		 	{% endif %}
+
+		 	{% if not session['logged_in'] %}
+			<ul class="nav navbar-nav navbar-right">
+				<li><a id="home_user_create" href="{{ url_for('user.signup_route') }}">Sign up</a></li>
+		 	</ul>
+
+			<ul class="nav navbar-nav navbar-right">
+				<li><a id="home_login" href="{{ url_for('user.login_route') }}">Log in</a></li>
+		 	</ul>
+		 	{% endif %}	 
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container -->
+</nav>
+
+<div>
+<br><br><br><br>
+	 {% block content %}{% endblock %}
+</div>
+
+<footer class="footer">
+ 	<div class="container">
+		<p class="text-muted">By Yunsheng Bai.
+		<a href="{{ url_for('main.contact_route') }}">Contact</a></p>
+	</div>
+</footer>
+</body>
+</html>

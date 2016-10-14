@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- https://www.imagely.com/wordpress-gallery-plugin/ -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/thumbnail.css')}}" type="text/css" media="all">
+
+<div class="container">
+	<div class="row">
+		<p style="color:gray">Main » Learn</p>
+	</div>
+
+	{% if error %}
+	<strong class=text-danger><p class="error">{{ error }}</p></strong>
+	{% endif %}
+
+	<div class="container">
+		<div class="row">
+			<p><h3>Add text knowledge:</h3></p>
+		</div>
+	</div>
+
+	<div class="container">
+		<form action="" method="post" enctype="multipart/form-data">
+			<input name="op" type="hidden" value="add_text"></input>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Text: </label>
+				<div class="col-sm-8">
+					<input name="knowledge" class="form-control" placeholder="The capital of Italy is Rome">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<input type="submit" value="Add" class="btn btn-info btn-sm">
+			</div>
+		</form>
+	</div>
+
+	<div class="container">
+		<form action="" method="post" enctype="multipart/form-data">
+			<input name="op" type="hidden" value="add_url"></input>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Url: </label>
+				<div class="col-sm-8">
+					<input name="knowledge" class="form-control" placeholder="https://en.wikipedia.org/wiki/Lucida">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<input type="submit" value="Add" class="btn btn-info btn-sm">
+			</div>
+		</form>
+	</div>
+
+	<ul>
+	{% for i in text %}
+		<form action="" method="post" enctype="multipart/form-data">
+			<input name="op" type="hidden" value="delete_text"></input>
+			<input name="text_id" type="hidden" value={{ i['text_id'] }}></input>
+			<div class="col-sm-10">
+				<li>{% if i['type'] == 'url' %}<a href={{ i['text_data'] }}>{% endif %}{{ i['text_data'] }}{% if i['type'] == 'url' %}</a>{% endif %}</li>
+			</div>
+			<div class="col-sm-2">
+				<input type="submit" value="Delete" class="btn btn-danger btn-sm">
+			</div>
+		</form>
+	{% endfor %}
+	</ul>
+
+	<div class="container">
+		<div class="row">
+			<p><h3>Add image knowledge:</h3></p>
+		</div>
+	</div>
+
+	<div class="container">
+		<form action="" method=post enctype=multipart/form-data>
+			<input name="op" type="hidden" value="add_image"></input>
+
+			<div class="form-group">
+				<input id="file_input" type="file" name="file" size="60">
+				<p class="help-block">Upload your picture!</p>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Label: </label>
+				<div class="col-sm-6">
+					<input name="label" class="form-control" placeholder="Eiffel Tower">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<input id="file_submit" type="submit" value="Add" class="btn btn-info btn-sm">
+			</div>
+		</form>
+	</div>
+	
+	{% for i in pictures %}
+	<div class="ngg-gallery-thumbnail-box">
+		<form action="" method="post" enctype="multipart/form-data">
+			<input name="op" type="hidden" value="delete_image"></input>
+			<input name="label" type="hidden" value={{ i['label'] }}></input>
+			<input name="image_id" type="hidden" value={{ i['image_id'] }}></input>
+			<div class="ngg-gallery-thumbnail">
+				<img src="data:;base64,{{ i['data'] }}" style="max-width:none;" height="90"></img>
+			</div>
+			<div class="ngg-template-caption">{{ i['label'] }}
+			<input type="submit" value="Delete" class="btn btn-danger btn-sm"></div>
+		</form>
+	</div>
+	{% endfor %}
+	
+</div>
+
+<br><br>
+{% endblock %}

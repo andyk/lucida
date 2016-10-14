@@ -1,24 +1,15 @@
-# Question Answer
+# Question Answering (QA)
 
-The question answering service uses OpenEphyra, an open source project from
+The current implementation of QA uses OpenEphyra, an open source project from
 Carnegie Mellon.
 
-Dependencies: You'll need to install thrift and modify `config.inc` from the top
-directory to include the path to your thrift installation. Then visit
-(thrift)/lib/java and run `ant`, where (thrift) is the directory where you
-installed thrift.  For more information, take a look at
-[this](https://thrift.apache.org/lib/java).  This version has been tested with
-thrift-0.9.2.
+## Notes:
 
-common/ -- Contains the actual OpenEphyra package, with some modifications.
- You shouldn't need to modify this directory.
+1. `OpenEphyra` contains the implementation of the OpenEphyra QA service.
 
-lucida/ -- Contains an OpenEphyra wrapper to communicates with Lucida.
+2. If you want to create and use another QA implementation,
+you can start by making a directory parallel to `OpenEphyra` and modify `Makefile`.
+Make sure to reference `../lucidaservice.thrift` and `../lucidatypes.thrift`.
 
-template/ -- Contains a stand-alone OpenEphyra wrapper for use in any application.
-
-## Building and starting the QA service
-Navigate to `lucida` or `template` and follow the README
-To change the Database used, edit `common/qa-runtime-config.inc`
-
-Last Modified: 07/01/15
+3. Type `make` to build all QA implementations,
+or type `cd OpenEphyra` and `make` to only build the OpenEphyra QA service.

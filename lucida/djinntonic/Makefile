@@ -1,22 +1,25 @@
-.PHONY: all tonic-common djinn tonic-img clean dist-clean
+include ../../Makefile.common
+fname=djinn-weights-1.0.tar.gz
 
-export CPU_ONLY=1
+all:
+	cd tools; \
+	sh install-protobuf.sh; \
+	sh install-caffe.sh; \
+	cp common.hpp caffe/distribute/include/caffe/common.hpp; \
+	cd ..; \
+	if [ ! -d "gen-cpp2" ]; then \
+		python -mthrift_compiler.main --gen cpp2 ../lucidaservice.thrift; \
+		python -mthrift_compiler.main --gen cpp2 ../lucidatypes.thrift; \
+	fi; \
+	cd models; \
+	test ! -s face.caffemodel && wget http://web.eecs.umich.edu/~jahausw/download/${fname} && tar xvzf ${fname} && rm -rf ${fname}; \
+	cd ../imc; \
+	make; \
+	cd ../dig; \
+	make; \
+	cd ../face; \
+	make; \
+	cd ..; \
 
-export INCLUDE_DIRS:=/usr/local/include
-export LIBRARY_DIRS:=/usr/local/lib
-
-all: tonic-common djinn tonic-img
-
-tonic-common:
-	make -C $@ all
-
-djinn:
-	make -C $@ all
-
-tonic-img:
-	make -C $@ all
-
-clean:
-	make -C tonic-common clean
-	make -C djinn clean
-	make -C tonic-img clean
+%:
+	@:

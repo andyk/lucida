@@ -1,2 +1,2 @@
-SUBDIRS=lucida
+SUBDIRS=OpenEphyra
 include ../../Makefile.common

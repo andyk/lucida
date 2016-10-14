@@ -1,8 +1,0 @@
-**/imserver
-**/input-*.jpg
-gen-**
-**/imclient
-**/imserver
-*.pb
-*.o
-

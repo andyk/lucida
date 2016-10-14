@@ -1,8 +1,34 @@
-### Djinn-and-Tonic
-In progress adapting for create, learn, infer (cli) setup. Currently includes
-tonic-img facial recognitiion pipeline.
-- change the `CAFFE` location in `tonic-common/Makefile.config`
-- `make` from this directory builds all subdirectories needed.
-- go to `djinn/` and look at the README and open the djinn service first,
-  optionally testing.
-- go to `tonic-img` and follow the README there.
+# Djinn and Tonic
+
+## Major Dependencies
+
+- [Caffe](http://caffe.berkeleyvision.org/)
+- [Facebook Thrift](https://github.com/facebook/fbthrift)
+
+# Structure
+
+- `dig/`: implementation of the digit recognition service
+- `face/`: implementation of the facial recognition service
+- `imc/`: implementation of the image classification service
+- `models/`: DNN models necessary for the above services
+- `tools/`: dependencies necessary for Djinn and Tonic
+
+## Build
+
+```
+make
+```
+
+## Run
+
+```
+cd dig # or face, or imc
+make start_server
+```
+
+## Test
+
+```
+cd dig # or face, or imc
+make start_test
+```

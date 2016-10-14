@@ -1,39 +1,16 @@
-# Automatic Speech Recognition
-ASR uses [Kaldi](http://kaldi.sourceforge.net/) is a speech recognition toolkit
-written in C++ that is freely available under the Apache license. ASR uses
-[Apache Thrift](http://thrift.apache.org/) to communicate with the command
-center.
+# Automatic Speech Recognition (ASR)
 
-`asr/` directory contains several files and folder:
-```
-common/
-lucida/
-template/
-```
+The current implementation of ASR uses [Kaldi](http://kaldi.sourceforge.net/),
+a speech recognition toolkit written in C++ that is freely available under the Apache license. 
 
-- `common/`: Contains the actual Kaldi package and scripts, with some
-  modifications
-- `lucida/`: Contains a Kaldi micro-service that communicates with the Lucida
-  Command Center
-- `template/`: Contains a stand-alone Kaldi micro-service for use in any
-  application
+## Notes:
 
-## Building Kaldi
-Some preliminary steps are need before running Kaldi in either `lucida/` folder
-or `template/` folder
+1. `kaldi_gstreamer_asr` contains the implementation of the Kaldi ASR service.
 
-```
-$ cd common/scripts/
-$ ./prepare.sh
-$ ./compile-kaldi.sh
-```
+2. If you want to create and use another ASR implementation,
+you can start by making a directory parallel to `kaldi_gstreamer_asr` and modify `Makefile`.
+Make sure to reference `../lucidaservice.thrift` and `../lucidatypes.thrift`.
 
-Navigate to `lucida` or `template` to continue the build process after building
-Kaldi in `common`.
+3. Type `make` to build all ASR implementations,
+or type `cd kaldi_gstreamer_asr` and `make` to only build the Kaldi ASR service.
 
-## Notes
-1. Make sure to resolve any extra dependencies that may appear before compiling
-   kaldi with `compile-kaldi.sh`
-2. Error with Openfst may appear when compiling, to resolve go to the `tools/`
-   directory  and type `make` and then try compiling again with
-   `compile-kaldi.sh`

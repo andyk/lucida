@@ -1,0 +1,10 @@
+*.pb
+*.o
+.cproject
+.project
+IMCServer
+FACEServer
+DIGServer
+gen-cpp2
+tools/caffe
+tools/protobuf-2.5.0
