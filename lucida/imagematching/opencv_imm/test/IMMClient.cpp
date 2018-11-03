@@ -2,32 +2,6 @@
 #include <iostream>
 #include "mongo/client/dbclient.h"
 
-// g++ IMMClient.cpp -pthread -lmongoclient -lboost_thread -lboost_system -lboost_regex -lssl -lcrypto -o x
-
-// works
-
-// g++ gen-cpp2/LucidaService_client.o gen-cpp2/lucidaservice_constants.o gen-cpp2/LucidaService.o gen-cpp2/LucidaService_processmap_binary.o gen-cpp2/LucidaService_processmap_compact.o gen-cpp2/lucidaservice_types.o gen-cpp2/lucidatypes_constants.o gen-cpp2/lucidatypes_types.o IMMClient.o  -lrt -lprotobuf -ltesseract -pthread -lmongoclient -lboost_thread -lboost_system -lboost_regex -lboost_program_options -lboost_filesystem -lthrift -lfolly -lwangle -lglog -lthriftcpp2 -lgflags -lthriftprotocol -lssl -lcrypto -o imm_test
-
-// :(
-
-// g++ gen-cpp2/LucidaService_client.o gen-cpp2/lucidaservice_constants.o gen-cpp2/LucidaService.o gen-cpp2/LucidaService_processmap_binary.o gen-cpp2/LucidaService_processmap_compact.o gen-cpp2/lucidaservice_types.o gen-cpp2/lucidatypes_constants.o gen-cpp2/lucidatypes_types.o IMMClient.o -lrt -lprotobuf -ltesseract -pthread -lboost_program_options -lboost_filesystem -lboost_system -lboost_thread -lboost_regex -lthrift -lfolly -lwangle -lglog -lthriftcpp2 -lgflags -lthriftprotocol -lssl -lcrypto -lmongoclient -o imm_test
-
-
-
-// works
-
-// g++ IMMClient.cpp -lrt -lprotobuf -ltesseract -pthread -lmongoclient -lboost_thread -lboost_system -lboost_regex -lboost_program_options -lboost_filesystem -lthrift -lfolly -lwangle -lglog -lthriftcpp2 -lgflags -lthriftprotocol -lssl -lcrypto -o x
-
-// :(
-
-// g++ IMMClient.o -lrt -lprotobuf -ltesseract -pthread -lmongoclient -lboost_thread -lboost_system -lboost_regex -lboost_program_options -lboost_filesystem -lthrift -lfolly -lwangle -lglog -lthriftcpp2 -lgflags -lthriftprotocol -lssl -lcrypto -o x
-
-// :(
-
-// g++ IMMClient.cpp -std=c++11 -lrt -lprotobuf -ltesseract -pthread -lmongoclient -lboost_thread -lboost_system -lboost_regex -lboost_program_options -lboost_filesystem -lthrift -lfolly -lwangle -lglog -lthriftcpp2 -lgflags -lthriftprotocol -lssl -lcrypto -o x
-
-// g++ -Wall -I../opencv -std=c++11 -fPIC  -O3 -c IMMClient.cpp -o IMMClient.o
-
 #include <unistd.h>
 #include <gflags/gflags.h>
 #include <iostream>
@@ -35,12 +9,15 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include <string> 
 
 #include <folly/futures/Future.h>
 #include "gen-cpp2/LucidaService.h"
 #include <thrift/lib/cpp2/async/HeaderClientChannel.h>
 #include "boost/filesystem/operations.hpp"
 #include "boost/filesystem/path.hpp"
+#include <folly/init/Init.h>
+#include "Parser.h"
 
 using namespace folly;
 using namespace apache::thrift;
@@ -55,18 +32,15 @@ using mongo::BSONObjBuilder;
 
 namespace fs = boost::filesystem;
 
-DEFINE_int32(port,
-		8082,
-		"Port for IMM service (default: 8082)");
-
 DEFINE_string(hostname,
 		"127.0.0.1",
 		"Hostname of the server (default: localhost)");
 
 void saveToMongoDb(DBClientConnection &conn, const string &LUCID,
-		const string &image_id, const string &data) {
-	BSONObj p = BSONObjBuilder().append("image_id", image_id).append("data", data)
-			.append("size", (int) data.size()).obj();
+		const string &label, const string &data) {
+	BSONObj p = BSONObjBuilder().append("image_id", label)
+	.append("label", label).append("data", data)
+	.append("size", (int) data.size()).obj();
 	conn.insert("lucida.images_" + LUCID, p); // insert the image data
 }
 
@@ -97,11 +71,22 @@ int main(int argc, char* argv[]) {
 		cout << "Caught " << e.what() << endl;
 	}
 
-	google::InitGoogleLogging(argv[0]);
-	google::ParseCommandLineFlags(&argc, &argv, true);
+	folly::init(&argc, &argv);
 	EventBase event_base;
+
+	Properties props;
+	props.Read("../../../config.properties");
+	string portVal;
+	int port;
+	if (!props.GetValue("IMM_PORT", portVal)) {
+		cout << "IMM port not defined" << endl;
+		return -1;
+	} else {
+		port = atoi(portVal.c_str());
+	}
+
 	std::shared_ptr<apache::thrift::async::TAsyncSocket> socket_t(
-			TAsyncSocket::newSocket(&event_base, FLAGS_hostname, FLAGS_port));
+			TAsyncSocket::newSocket(&event_base, FLAGS_hostname, port));
 	LucidaServiceAsyncClient client(
 			std::unique_ptr<HeaderClientChannel, DelayedDestruction::Destructor>(
 					new HeaderClientChannel(socket_t)));
@@ -149,10 +134,10 @@ int main(int argc, char* argv[]) {
 		query_input.type = "image";
 		query_input.data.push_back(image);
 		query_input.tags.push_back("localhost");
-		query_input.tags.push_back("8082");
+		query_input.tags.push_back(to_string(port));
 		query_input.tags.push_back("0");
 		query_spec.content.push_back(query_input);
-		cout << i << " Sending request to IMM at 8082" << endl;
+		cout << i << " Sending request to IMM at " << port << endl;
 		auto result = client.future_infer("Johann", std::move(query_spec)).then(
 				[=](folly::Try<std::string>&& t) mutable {
 			cout << i << " result: " << t.value() << endl;

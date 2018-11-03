@@ -1,4 +1,7 @@
-export OPENCV_VERSION=2.4.9
+#!/bin/bash
+if [ -z $THREADS ]; then
+  THREADS=`nproc`
+fi
 
 installCheck () {
   g++ check_opencv.cpp -o check_opencv
@@ -10,27 +13,31 @@ installCheck () {
   fi
 }
 
-if installCheck $0; then
+if installCheck "$0"; then
   echo "OpenCV already installed, skipping"
   exit 0
 fi
 
-git clone https://github.com/Itseez/opencv.git opencv-$OPENCV_VERSION \
-  && cd opencv-$OPENCV_VERSION \
-  && git checkout $OPENCV_VERSION \
-  && mkdir build \
+if [ ! -d opencv-2.4 ]; then
+  git clone https://github.com/opencv/opencv.git opencv-2.4
+  if [ $? -ne 0 ]; then
+    echo "Could not clone OpenCV!!! Please try again later..."
+    exit 1
+  fi
+fi
+cd "opencv-2.4" \
+  && git checkout "2.4" \
+  && mkdir -p build \
   && cd build \
   && cmake ..  \
   && make -j$THREADS \
-  && sudo make -j$THREADS install \
-  && cd ../ \
-  && rm -rf .git \
-  && cd ../
+  && make -j$THREADS install \
+  && cd ../../
 
-if installCheck $0; then
-  echo "OpenCV installed"; 
+if installCheck "$0"; then
+  echo "OpenCV installed";
   exit 0;
-else 
-  echo "Faile to install OpenCV";
+else
+  echo "Failed to install OpenCV";
   exit 1;
 fi

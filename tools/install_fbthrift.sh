@@ -1,3 +1,4 @@
+#!/bin/bash
 installCheck () {
   if [ ! -d fbthrift ]; then
     return 1
@@ -11,47 +12,31 @@ installCheck () {
   fi
 }
 
-if installCheck $0; then
+if installCheck "$0"; then
   echo "Facebook Thrift installed";
   exit 0;
 fi
 
-git clone https://github.com/facebook/fbthrift.git
-cd fbthrift/thrift/
-git checkout d811b530a4f5e11a520f5fb416a5a3a8a5f42ef8
-./build/deps_ubuntu_14.04.sh
-cd ../
-git clone https://github.com/facebook/folly.git
-cd folly/folly
-git checkout 6645b95d6402b48e7b3abdc01146a7a61a9378c9
-autoreconf -ivf
-./configure
-make
-make check
-sudo make install
-cd ../
-# rm -rf .git
-cd ../
-git clone https://github.com/facebook/wangle.git
-cd wangle/wangle
-git checkout 86c4794422e473f3ed5b50035104e1bc04c9646d
-cmake . -DBUILD_TESTS=OFF
-make
-ctest
-sudo make install
-cd ../
-# rm -rf .git
-cd ../
-cd thrift/
-autoreconf -if
-./configure
-sudo make
-sudo make install
-cd ..
-# rm -rf .git
-cd ..
+if [ ! -d fbthrift ]; then
+  git clone https://github.com/facebook/fbthrift.git
+  if [ $? -ne 0 ]; then
+    echo "Could not clone FBThrift!!! Please try again later..."
+    exit 1
+  fi
+fi
 
-if installCheck $0; then
+cd fbthrift/thrift \
+ && git checkout v2017.03.20.00 \
+ && echo "a1abbb7abcb259acbd94d0d0929b79607a8ce806" > ./build/FOLLY_VERSION \
+ && echo "a5503c88e1d6799dcfb337caf09834a877790c92" > ./build/WANGLE_VERSION \
+ && ./build/deps_ubuntu_14.04.sh \
+ && autoreconf -ivf \
+ && ./configure \
+ && make \
+ && make install \
+ && cd ../..
+
+if installCheck "$0"; then
   echo "Facebook Thrift installed";
   exit 0;
 else
