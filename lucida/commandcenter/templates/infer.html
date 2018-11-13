@@ -46,7 +46,8 @@
 		<table style="width:800px" align="center">
 			<tr>
 				<td>
-                    <!-- TODO: add for kaldi  <div id="recbutton" class="disabled" onclick="clearTranscription(); toggleListening();"></div>-->
+					<!-- TODO: add for kaldi   -->
+					<div id="recbutton" class="btn" onclick="clearTranscription(); toggleListening();"></div>
                 </td>
 				<td><div class="wrap">
 						<textarea id="trans" name="speech_input" form="infer_form"></textarea>
@@ -78,7 +79,7 @@
 		</form>
 
             <!-- TODO: remove if using kaldi -->
-            <div id="divStart">
+            <!-- <div id="divStart">
                 <button id="startButton" onclick="startButtonFunc()">
                     <img alt="Start" id="startImg"
                         src="static/image/microphone.png"></button>
@@ -102,7 +103,7 @@
 					<a href="http://djinn.clarity-lab.org">
 					<img src="{{ url_for('static', filename='image/djinn.png')}}" style="float: left; width: 100px; margin-left: 5px">
 					</a>
-				</td>
+				</td> -->
 
 		  </tr>
 		</table>

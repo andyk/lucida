@@ -35,7 +35,7 @@ fi
 if [ "$1" == "secure" ]; then
     echo "Enabling secure host"
     # Getting the host IP address
-    export ASR_ADDR_PORT="wss://$(/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'):$CMD_PORT"
+    export ASR_ADDR_PORT="wss://$(/sbin/ifconfig wlan0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'):$CMD_PORT"
     export SECURE_HOST=true
 
     # Generate self-signed certificates
