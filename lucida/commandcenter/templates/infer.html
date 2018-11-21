@@ -48,12 +48,15 @@
 				<td>
 					<!-- TODO: add for kaldi   -->
 					<div id="recbutton" class="btn" onclick="clearTranscription(); toggleListening();"></div>
+					<div align="center" >Kaldi</div>
                 </td>
-				<td><div class="wrap">
+				<td>
+					<div class="wrap">
 						<textarea id="trans" name="speech_input" form="infer_form"></textarea>
 					</div>
 				</td>
-				<td><div class="wrapr">
+				<td>
+					<div class="wrapr">
 						<textarea readonly id="clinc" style="margin-right: 10px">{% if result %}{{ result }}{% endif %}</textarea>
 					</div>
 				</td>
@@ -70,42 +73,30 @@
 			<tr>
 				<td></td>
 				<td colspan="2">
-				<br><br>
-
-
-			<div class="form-group">
-				<input id="file_submit" type="submit" value="Ask" class="btn btn-info">
-			</div>
-		</form>
-
-            <!-- TODO: remove if using kaldi -->
-            <!-- <div id="divStart">
-                <button id="startButton" onclick="startButtonFunc()">
-                    <img alt="Start" id="startImg"
-                        src="static/image/microphone.png"></button>
-            </div>
-
-				<center>
-					Powered by <a href="http://lucida.ai">Lucida</a>
-				</center>
+					<br><br>
+					<div class="form-group">
+						<input id="file_submit" type="submit" value="Ask" class="btn btn-info">
+					</div>
 				</td>
 			</tr>
+		</form>
+
+			<!-- TODO: remove if using kaldi -->
 			<tr>
-				<td></td>
-				<td>
-					<br>
-					<a href="http://lucida.ai">
-					<img src="{{ url_for('static', filename='image/lucida.jpg')}}" style="float: right; width: 100px; margin-right: 65px">
-					</a>
-				</td>
-				<td>
+				<div id="divStart">
+					<button id="startButton" onclick="startButtonFunc()">
+						<img alt="Start" id="startImg"
+							src="static/image/microphone.png">WebKit</button>
+				</div>
+			</tr>
+			<tr>
+				<td class="">
 					<br>
 					<a href="http://djinn.clarity-lab.org">
 					<img src="{{ url_for('static', filename='image/djinn.png')}}" style="float: left; width: 100px; margin-left: 5px">
 					</a>
-				</td> -->
-
-		  </tr>
+				</td>
+			</tr>
 		</table>
 	</div>
 
