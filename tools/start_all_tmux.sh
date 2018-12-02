@@ -23,6 +23,7 @@ fi
 tmux has-session -t ${SESSION_NAME}
 if [ $? -eq 0 ]; then
     echo "Session ${SESSION_NAME} already exists."
+    echo "Run the command \"tmux attach -t ${SESSION_NAME}\" to attach to the tmux session and access the terminal's for each service."
     exit 0;
 elif [ -n "$TMUX" ]; then
     echo "Already in a tmux session"
@@ -106,3 +107,4 @@ done
 # Start out on the first window when we attach
 tmux select-window -t ${SESSION_NAME}:0
 
+echo "Run the command \"tmux attach -t ${SESSION_NAME}\" to attach to the tmux session and access the terminal's for each service."
