@@ -38,6 +38,10 @@
 
 	{% if error %}
 	<strong class=text-danger><p class="error">{{ error }}</p></strong>
+	<div class="alert alert-danger" role="alert">
+		Something went wrong:
+		{{ error }}
+	</div>
 	{% endif %}
 </div>
 

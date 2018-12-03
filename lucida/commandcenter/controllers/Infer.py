@@ -26,7 +26,7 @@ def generic_infer_route(form, upload_file):
 			# Classify the query.
 			speech_input = form['speech_input'] if 'speech_input' in form \
 				else ''
-			print '@@@@@@@@@@', speech_input
+			print 'Query: ', speech_input
 			image_input = [upload_file.read()] if upload_file else None
 			lucida_id = session['username']
 			# Check if context is saved for Lucida user
@@ -77,7 +77,7 @@ def api_infer_route():
 		abort (403)
 
 	session['logged_in'] = True
-	print '@@@@@@@@', session['username']
+	print 'Logged in as: ', session['username']
 
 	options = generic_infer_route(request.form, request.files['file'] if 'file' in request.files else None)
 
