@@ -3,9 +3,15 @@
 {% block content %}
 
 {% if dates %}
-<meta id="dates" data-name="{{ dates }}"> <!-- passed to calendar.js -->
+<!-- <meta id="dates" data-name="{{ dates }}"> <!-- passed to calendar.js --> <!--
 <script src="https://apis.google.com/js/client.js?onload=checkAuth&output=embed"></script>
-<script src="{{ url_for('static', filename='js/calendar.js')}}"></script>
+<script src="{{ url_for('static', filename='js/calendar.js')}}"></script> -->
+<div class="alert alert-info" role="alert">
+	Here are the date's returned by the Calendar service: {{ dates }}
+	<br>
+	The old google calendar api code returns a 400 so we'll need to figure out something new to do with the dates or fix what's broken.
+	<br>
+</div>
 {% endif %}
 
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/asr.css')}}">

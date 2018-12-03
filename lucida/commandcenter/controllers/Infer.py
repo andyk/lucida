@@ -43,7 +43,7 @@ def generic_infer_route(form, upload_file):
 			log('Result ' + options['result'])
 			# Check if Calendar service is needed.
 			# If so, JavaScript needs to receive the parsed dates.
-			if services_needed.has_service('CA'):
+			if services_needed.has_service('CAWF'):
 				options['dates'] = options['result']
 				options['result'] = None
 	except Exception as e:
