@@ -39,7 +39,10 @@ def generic_infer_route(form, upload_file):
 				Config.SESSION[lucida_id]['data']['text'].append(speech_input)
 				speech_input = Config.SESSION[lucida_id]['data']['text']
 			node = services_needed.get_node(0)
-			options['result'] = thrift_client.infer(lucida_id, node.service_name, speech_input, image_input)
+			try:
+				options['result'] = thrift_client.infer(lucida_id, node.service_name, speech_input, image_input)
+			except Exception as ex:
+				print "Exception raised while trying to infer", ex.message
 			log('Result ' + options['result'])
 			# Check if Calendar service is needed.
 			# If so, JavaScript needs to receive the parsed dates.
@@ -47,15 +50,15 @@ def generic_infer_route(form, upload_file):
 				options['dates'] = options['result']
 				options['result'] = None
 	except Exception as e:
-                log(e)
-                options['errno'] = 500
-                options['error'] = str(e)
-                if 'code' in e and re.match("^4\d\d$", str(e.code)):
-                        options['errno'] = e.code
-                if str(e) == 'TSocket read 0 bytes':
-                        options['error'] = 'Back-end service encountered a problem'
-                if str(e).startswith('Could not connect to'):
-                        options['error'] = 'Back-end service is not running'
+		log(e)
+		options['errno'] = "Unknown"
+		options['error'] = str(e)
+		if 'code' in e and re.match("^4\d\d$", str(e.code)):
+			options['errno'] = e.code
+		if str(e) == 'TSocket read 0 bytes':
+			options['error'] = 'Back-end service encountered a problem'
+		if str(e).startswith('Could not connect to'):
+			options['error'] = 'Back-end service is not running'
 	return options
 
 @infer.route('/infer', methods=['GET', 'POST'])
