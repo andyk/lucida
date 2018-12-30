@@ -2,7 +2,7 @@
 Weather API configuration details
 """
 
-import ConfigParser, sys
+import ConfigParser, sys, config
 
 class FakeSecHead(object):
     def __init__(self, fp):
@@ -26,4 +26,4 @@ PORT = int(port_dic['we_port'])
 # Open Weather Map API key
 # https://openweathermap.org/api
 OWM_API_URL_BASE = 'http://api.openweathermap.org/data/2.5/weather?'
-OWM_API_KEY = 'replaceme' # TODO: add your API key here
+OWM_API_KEY = config.OWM_API_KEY
