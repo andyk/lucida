@@ -58,4 +58,3 @@ tools/mongo-c-driver-1.3.0/
 tools/mongo-cxx-driver/
 .DS_Store
 .vscode/settings.json
-lucida/botframework-interface/package-lock.json
