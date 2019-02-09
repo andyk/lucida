@@ -117,6 +117,12 @@ class MSWF(workFlow):
 			self.isEnd = True;
 			return;
 
+class WEWF(workFlow):
+	def processCurrentState(self,inputModifierText,inputModifierImage):
+		if(self.currentState==0):
+			self.batchedData = [serviceRequestData("WE",inputModifierText[0])];
+			self.isEnd = True;
+			return;
 
 WFList = {
 	"IMMWF" : IMMWF(),
@@ -127,9 +133,9 @@ WFList = {
 	"FACEWF" : FACEWF(),
 	"DIGWF" : DIGWF(),
 	"ENSEMBLEWF" : ENSEMBLEWF(),
-	"MSWF" : MSWF()
-
-}
+	"MSWF" : MSWF(),
+	"WEWF" : WEWF()
+	}
 
 
 

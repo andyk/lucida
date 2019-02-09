@@ -6,3 +6,4 @@ phantom.out
 last_pushed_host
 node_modules/
 deps/downloads/
+package-lock.json

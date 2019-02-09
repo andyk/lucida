@@ -15,6 +15,7 @@ from thrift.server import TServer
 
 import json
 import urllib
+import re
 
 class WeatherHandler(LucidaService.Iface):
     def create(self, LUCID, spec):
@@ -39,34 +40,49 @@ class WeatherHandler(LucidaService.Iface):
         """
         input_data = query.content[0].data[-1]
         result = 'No weather found for %s' % input_data
-        url_location = urllib.quote_plus(input_data)
 
-        # weather from Weather Underground
+        #TODO - Figure out a better way to get the location out of the weather query.
+        # Current method can only handle basic requests, doesn't do well with non USA cities or anywhere in new mexico
+
+        print input_data
+
+        input_data = re.sub('\[u', '', input_data)
+        input_data = re.sub('[^A-Za-z0-9 ]+', '', input_data)
+
+        location_string = input_data.split("in ")
+        locations_input = str(location_string[-1]).split()
+        location_pieces_count = locations_input.__len__()
+
+        if location_pieces_count == 1:
+            url_location = urllib.quote_plus(locations_input[-1]) # Handles when a location has only the city name
+        elif location_pieces_count == 2:
+            url_location = urllib.quote_plus(locations_input[-2] + ", " + locations_input[-1] + '\']') # Handles city name with state at end
+        elif location_pieces_count == 3:
+            url_location = urllib.quote_plus(locations_input[-3] + " " + locations_input[-2] + ", " + locations_input[-1] + '\']') # Handles multi part city with state at the end
+        elif location_pieces_count == 4:
+            url_location = urllib.quote_plus(locations_input[-4] + " " + locations_input[-3] + " " + locations_input[-2] + ", " + locations_input[-1] + '\']') # Handles multi part city with state at the end
+
+        print 'Debug: var url_location - ', url_location
+
         try:
-            f = urllib.urlopen(WU_API_URL_BASE + \
-                    '%s/conditions/q/%s.json' % (WU_API_KEY, url_location))
+            f = urllib.urlopen(OWM_API_URL_BASE + \
+                    'q=%s&appid=%s&units=imperial&type=like' % (url_location, OWM_API_KEY))
+            # To help with debugging, enter what was "tried" in a web browser and that will let you see what the response is
+            print "Tried: ", OWM_API_URL_BASE + \
+                    'q=%s&appid=%s&units=imperial&type=like' % (url_location, OWM_API_KEY)
             json_string = f.read()
             parsed_json = json.loads(json_string)
-            if 'error' not in parsed_json['response'] \
-                    and 'current_observation' in parsed_json:
-                weather = parsed_json['current_observation']['weather']
-                temp = parsed_json['current_observation']['temperature_string']
-                city = parsed_json['current_observation']['display_location']['full']
-                result = "Current weather in %s is %s %s" % (city, weather, temp)
-                print 'From Weather Underground: %s' % result
-            else:
-                # weather from Open Weather Map
-                f = urllib.urlopen(OWM_API_URL_BASE + \
-                        'q=%s&appid=%s&units=imperial&type=like' % (url_location, OWM_API_KEY))
-                json_string = f.read()
-                parsed_json = json.loads(json_string)
-                if 'weather' in parsed_json and 'main' in parsed_json and 'name' in parsed_json:
-                    weather = parsed_json['weather'][0]['main']
-                    temp = parsed_json['main']['temp']
-                    city = parsed_json['name']
-                    if city in input_data:
-                        result = 'Current weather in %s is %s, %s F' % (city, weather, temp)
-                    print 'From Open Weather Map: %s' % result
+            if 'cod' in parsed_json and 'message' in parsed_json:
+                message = parsed_json['message']
+                result = "Error using API, " + message
+                return result
+            if 'weather' in parsed_json and 'main' in parsed_json and 'name' in parsed_json:
+                weather = parsed_json['weather'][0]['description']
+                temp = parsed_json['main']['temp']
+                city = parsed_json['name']
+                # if city in input_data:
+                result = 'Current weather in %s is %s, temperature is %s Fahrenheit' % (city, weather, temp)
+                print 'From Open Weather Map: %s' % result
             f.close()
         except IOError as err:
             if 401 in err:

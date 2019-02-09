@@ -1,0 +1,5 @@
+# Example config.py for the weather module, copy and rename this file to 
+# config.py, then place your OWM API key in here after registering and 
+# generating it from https://openweathermap.org/
+
+OWM_API_KEY = 'replaceme' # TODO: add your API key here
