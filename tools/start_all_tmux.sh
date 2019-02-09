@@ -23,6 +23,7 @@ fi
 tmux has-session -t ${SESSION_NAME}
 if [ $? -eq 0 ]; then
     echo "Session ${SESSION_NAME} already exists."
+    echo "Run the command \"tmux attach -t ${SESSION_NAME}\" to attach to the tmux session and access the terminal's for each service."
     exit 0;
 elif [ -n "$TMUX" ]; then
     echo "Already in a tmux session"
@@ -35,7 +36,7 @@ fi
 if [ "$1" == "secure" ]; then
     echo "Enabling secure host"
     # Getting the host IP address
-    export ASR_ADDR_PORT="wss://$(/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'):$CMD_PORT"
+    export ASR_ADDR_PORT="wss://$(/sbin/ifconfig wlan0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'):$CMD_PORT"
     export SECURE_HOST=true
 
     # Generate self-signed certificates
@@ -106,3 +107,4 @@ done
 # Start out on the first window when we attach
 tmux select-window -t ${SESSION_NAME}:0
 
+echo "Run the command \"tmux attach -t ${SESSION_NAME}\" to attach to the tmux session and access the terminal's for each service."

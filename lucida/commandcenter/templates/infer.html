@@ -3,9 +3,15 @@
 {% block content %}
 
 {% if dates %}
-<meta id="dates" data-name="{{ dates }}"> <!-- passed to calendar.js -->
+<!-- <meta id="dates" data-name="{{ dates }}"> <!-- passed to calendar.js --> <!--
 <script src="https://apis.google.com/js/client.js?onload=checkAuth&output=embed"></script>
-<script src="{{ url_for('static', filename='js/calendar.js')}}"></script>
+<script src="{{ url_for('static', filename='js/calendar.js')}}"></script> -->
+<div class="alert alert-info" role="alert">
+	Here are the date's returned by the Calendar service: {{ dates }}
+	<br>
+	The old google calendar api code returns a 400 so we'll need to figure out something new to do with the dates or fix what's broken.
+	<br>
+</div>
 {% endif %}
 
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/asr.css')}}">
@@ -37,7 +43,12 @@
 	</div>
 
 	{% if error %}
-	<strong class=text-danger><p class="error">{{ error }}</p></strong>
+	<div class="alert alert-danger" role="alert">
+		Something went wrong:
+		{{ error }}
+		<br>
+		Error# {{ errno }}
+	</div>
 	{% endif %}
 </div>
 
@@ -46,13 +57,17 @@
 		<table style="width:800px" align="center">
 			<tr>
 				<td>
-                    <!-- TODO: add for kaldi  <div id="recbutton" class="disabled" onclick="clearTranscription(); toggleListening();"></div>-->
+					<!-- TODO: add for kaldi   -->
+					<div id="recbutton" class="btn" onclick="clearTranscription(); toggleListening();"></div>
+					<div align="center" >Kaldi</div>
                 </td>
-				<td><div class="wrap">
+				<td>
+					<div class="wrap">
 						<textarea id="trans" name="speech_input" form="infer_form"></textarea>
 					</div>
 				</td>
-				<td><div class="wrapr">
+				<td>
+					<div class="wrapr">
 						<textarea readonly id="clinc" style="margin-right: 10px">{% if result %}{{ result }}{% endif %}</textarea>
 					</div>
 				</td>
@@ -69,42 +84,30 @@
 			<tr>
 				<td></td>
 				<td colspan="2">
-				<br><br>
-
-
-			<div class="form-group">
-				<input id="file_submit" type="submit" value="Ask" class="btn btn-info">
-			</div>
-		</form>
-
-            <!-- TODO: remove if using kaldi -->
-            <div id="divStart">
-                <button id="startButton" onclick="startButtonFunc()">
-                    <img alt="Start" id="startImg"
-                        src="static/image/microphone.png"></button>
-            </div>
-
-				<center>
-					Powered by <a href="http://lucida.ai">Lucida</a>
-				</center>
+					<br><br>
+					<div class="form-group">
+						<input id="file_submit" type="submit" value="Ask" class="btn btn-info">
+					</div>
 				</td>
 			</tr>
+		</form>
+
+			<!-- TODO: remove if using kaldi -->
 			<tr>
-				<td></td>
-				<td>
-					<br>
-					<a href="http://lucida.ai">
-					<img src="{{ url_for('static', filename='image/lucida.jpg')}}" style="float: right; width: 100px; margin-right: 65px">
-					</a>
-				</td>
-				<td>
+				<div id="divStart">
+					<button id="startButton" onclick="startButtonFunc()">
+						<img alt="Start" id="startImg"
+							src="static/image/microphone.png">WebKit</button>
+				</div>
+			</tr>
+			<tr>
+				<td class="">
 					<br>
 					<a href="http://djinn.clarity-lab.org">
 					<img src="{{ url_for('static', filename='image/djinn.png')}}" style="float: left; width: 100px; margin-left: 5px">
 					</a>
 				</td>
-
-		  </tr>
+			</tr>
 		</table>
 	</div>
 
