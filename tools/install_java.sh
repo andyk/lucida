@@ -7,6 +7,7 @@ export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 # so now using OpenJDK, but not positive everything will work.
 add-apt-repository ppa:openjdk-r/ppa && \
   apt-get update && \
-  apt-get -y install openjdk-8-jdk #&& \
+  apt-get -y install openjdk-8-jdk && \
+  update-alternatives --set java $(update-alternatives --list java|grep java-8|cat)
   #rm -rf /var/lib/apt/lists/* && \
   #rm -rf /var/cache/oracle-jdk$JAVA_VERSION-installer
