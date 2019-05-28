@@ -2,9 +2,11 @@
 export JAVA_VERSION=8
 export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
-echo oracle-java$JAVA_VERSION-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
-  add-apt-repository -y ppa:webupd8team/java && \
+# Used to use Oracle Java 8, but that is no longer
+# available due to Oracle's license change in April 2019
+# so now using OpenJDK, but not positive everything will work.
+add-apt-repository ppa:openjdk-r/ppa && \
   apt-get update && \
-  apt-get install -y oracle-java$JAVA_VERSION-installer && \
-  rm -rf /var/lib/apt/lists/* && \
-  rm -rf /var/cache/oracle-jdk$JAVA_VERSION-installer
+  apt-get -y install openjdk-8-jdk #&& \
+  #rm -rf /var/lib/apt/lists/* && \
+  #rm -rf /var/cache/oracle-jdk$JAVA_VERSION-installer
