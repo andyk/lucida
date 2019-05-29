@@ -25,6 +25,19 @@ if [ ! -d fbthrift ]; then
   fi
 fi
 
+# Ensure fbthrift installs most recent version of mstch that
+# supports cmake 2.8 (i.e. the version installed in Ubuntu 14.04).
+# By default, fbthrift installs https://github.com/no1msd/mstch master
+# which requires cmake version >= 3.0.2.
+mkdir -p fbthrift/thrift/build/deps
+pushd fbthrift/thrift/build/deps
+# mstch 0.2.1 is the most recent version supporting cmake 2.8.
+# We could just update cmake but newest PPAs seem only to
+# have 3.2.2 for Ubuntu 14.04, for example see:
+# https://launchpad.net/~george-edison55/+archive/ubuntu/cmake-3.x
+git clone --branch 0.2.1 https://github.com/no1msd/mstch
+popd
+
 cd fbthrift/thrift \
  && git checkout v2017.03.20.00 \
  && echo "a1abbb7abcb259acbd94d0d0929b79607a8ce806" > ./build/FOLLY_VERSION \
