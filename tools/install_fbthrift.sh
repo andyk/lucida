@@ -44,7 +44,7 @@ fi
 
 # Newest version of mstch requires cmake 3.0.2 or higher.
 pushd ~/
-wget https://github.com/Kitware/CMake/releases/download/v4.14.4/cmake-3.14.4.tar.gz
+wget https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4.tar.gz
 tar -xvzf cmake-3.14.4.tar.gz
 cd cmake-3.14.4
 ./configure
