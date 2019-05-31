@@ -5,6 +5,10 @@ all:
 	phantomjs -v 2>/dev/null  | grep -Pe "^2\." 2>&1 1>/dev/null || sudo ./deps/install_phantomjs.sh
 	which node || sudo ./deps/install_node.sh
 	which npm || sudo ./deps/install_node.sh
+	# Make sure this potentially non-root user has permission to access the npm cache
+	# per https://stackoverflow.com/questions/50639690/on-npm-install-unhandled-rejection-error-eacces-permission-denied
+	sudo chown -R $USER:$GROUP ~/.npm
+	sudo chown -R $USER:$GROUP ~/.config
 	npm install
 
 start_server:
